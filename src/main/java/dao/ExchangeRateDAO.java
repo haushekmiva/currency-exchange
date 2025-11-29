@@ -81,4 +81,15 @@ public class ExchangeRateDAO {
         }
         return OptionalInt.empty();
     }
+    public void update(int id, double rate) {
+        String sql = "UPDATE users SET rate = ? WHERE id = ?";
+        try (Connection connection = manager.connection();
+             PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setDouble(1, rate);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
