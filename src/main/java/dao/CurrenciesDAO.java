@@ -2,6 +2,9 @@ package dao;
 
 import exceptions.DataBaseException;
 import model.Currency;
+import utils.LogMessageCreator;
+import utils.MessageType;
+import utils.OperationType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +14,7 @@ import java.util.OptionalInt;
 
 public class CurrenciesDAO  {
     private final DataBaseManager manager;
+    private final String tableName = "currencies";
 
     public CurrenciesDAO(DataBaseManager manager) {
         this.manager = manager;
@@ -44,7 +48,8 @@ public class CurrenciesDAO  {
             }
             return currencies;
         } catch (SQLException e) {
-            throw new DataBaseException("Failed to fetch data from database", e);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName, -1);
+            throw new DataBaseException(message, e);
         }
     }
 
@@ -69,7 +74,8 @@ public class CurrenciesDAO  {
                 } else return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new DataBaseException("Failed to fetch data from database", e);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName, id);
+            throw new DataBaseException(message, e);
         }
 
     }
@@ -89,7 +95,8 @@ public class CurrenciesDAO  {
             }
 
         } catch (SQLException e) {
-            throw new DataBaseException("Failed to add data to database", e);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.ADD, tableName, -1);
+            throw new DataBaseException(message, e);
         }
 
     }

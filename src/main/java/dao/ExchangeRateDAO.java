@@ -2,6 +2,9 @@ package dao;
 
 import exceptions.DataBaseException;
 import model.ExchangeRate;
+import utils.LogMessageCreator;
+import utils.MessageType;
+import utils.OperationType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,6 +14,8 @@ import java.util.OptionalInt;
 
 public class ExchangeRateDAO {
     private DataBaseManager manager;
+    private String tableName = "exchange_rates"; // потом внести в конфиг
+
 
     public ExchangeRateDAO(DataBaseManager manager) {
         this.manager = manager;
@@ -31,7 +36,8 @@ public class ExchangeRateDAO {
             }
             return exchangeRates;
         } catch (SQLException e) {
-            throw new DataBaseException("Failed to fetch data from database", e);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName, -1);
+            throw new DataBaseException(message, e);
         }
     }
 
@@ -57,7 +63,8 @@ public class ExchangeRateDAO {
             }
 
         } catch (SQLException e) {
-            throw new DataBaseException("Failed to fetch data from database", e);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName, id);
+            throw new DataBaseException(message, e);
         }
     }
 
@@ -79,7 +86,8 @@ public class ExchangeRateDAO {
             }
 
         } catch (SQLException e) {
-            throw new DataBaseException("Failed to add data to database", e);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.ADD, tableName, -1);
+            throw new DataBaseException(message, e);
         }
     }
 
@@ -92,7 +100,8 @@ public class ExchangeRateDAO {
             stmt.setInt(2, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new DataBaseException("Failed to update data in database", e);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.UPDATE, tableName, id);
+            throw new DataBaseException(message, e);
         }
 
     }
