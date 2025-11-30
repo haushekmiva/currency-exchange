@@ -1,6 +1,7 @@
 package utils;
 
 public class LogMessageCreator {
+    public static final int NO_SPECIFIC_ID = -1;
 
     public static String createMessage(MessageType messageType, OperationType operationType, String tableName, int elementId) {
         String message = "";
@@ -19,7 +20,7 @@ public class LogMessageCreator {
         message += tableName + " ";
 
         if (!operationType.equals(OperationType.ADD)) {
-            if (elementId == -1) {
+            if (elementId == NO_SPECIFIC_ID) {
                 message += "all elements";
             } else message += "an element with id = " + elementId + " ";
         }

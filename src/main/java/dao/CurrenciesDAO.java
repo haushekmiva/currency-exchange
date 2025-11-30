@@ -48,7 +48,8 @@ public class CurrenciesDAO  {
             }
             return currencies;
         } catch (SQLException e) {
-            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName, -1);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName,
+                    LogMessageCreator.NO_SPECIFIC_ID);
             throw new DataBaseException(message, e);
         }
     }
@@ -95,7 +96,8 @@ public class CurrenciesDAO  {
             }
 
         } catch (SQLException e) {
-            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.ADD, tableName, -1);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.ADD, tableName,
+                    LogMessageCreator.NO_SPECIFIC_ID);
             throw new DataBaseException(message, e);
         }
 
