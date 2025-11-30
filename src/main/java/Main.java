@@ -11,9 +11,6 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 
-/**
- * TODO: добавить второй класс дао для обменных курсов (на понимание) и после подумать об абстракции.
- */
 public class Main {
     public static void main(String[] args) throws SQLException {
         String url = "jdbc:sqlite:data.db";

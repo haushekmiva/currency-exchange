@@ -1,5 +1,6 @@
 package dao;
 
+import exceptions.DataBaseException;
 import model.Currency;
 
 import java.sql.*;
@@ -9,7 +10,7 @@ import java.util.Optional;
 import java.util.OptionalInt;
 
 public class CurrenciesDAO  {
-    private DataBaseManager manager;
+    private final DataBaseManager manager;
 
     public CurrenciesDAO(DataBaseManager manager) {
         this.manager = manager;
@@ -43,7 +44,7 @@ public class CurrenciesDAO  {
             }
             return currencies;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataBaseException("Failed to fetch data from database", e);
         }
     }
 
@@ -51,25 +52,26 @@ public class CurrenciesDAO  {
 
         String sql = "SELECT * FROM currencies WHERE id = ?"; // запросик для получения записи из бд где id = чему-то
 
-        try (Connection connection = manager.connection(); PreparedStatement stmt = connection.prepareStatement(sql);
-             ResultSet resultSet = stmt.executeQuery();) {
+        try (Connection connection = manager.connection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             // заполняем вопросики и отправляем запрос
             stmt.setInt(1, id);
 
-            if (resultSet.next()) {
-                String code = resultSet.getString("code");
-                String fullName = resultSet.getString("full_name");
-                String sign = resultSet.getString("sign");
-                Currency currency = new Currency(id, code, fullName, sign);
+            try (ResultSet resultSet = stmt.executeQuery()) {
+                if (resultSet.next()) {
+                    String code = resultSet.getString("code");
+                    String fullName = resultSet.getString("full_name");
+                    String sign = resultSet.getString("sign");
+                    Currency currency = new Currency(id, code, fullName, sign);
 
-                // optional это такая оберточка которую юзаем что не использовать null
-                return Optional.of(currency);
+                    // optional это такая оберточка которую юзаем что не использовать null
+                    return Optional.of(currency);
+                } else return Optional.empty();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataBaseException("Failed to fetch data from database", e);
         }
-        return Optional.empty();
+
     }
 
     public OptionalInt add(String code, String fullName, String sign) {
@@ -83,12 +85,12 @@ public class CurrenciesDAO  {
             try (ResultSet resultSet = stmt.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     return OptionalInt.of(resultSet.getInt(1));
-                }
+                } else return OptionalInt.empty();
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } return OptionalInt.empty();
+            throw new DataBaseException("Failed to add data to database", e);
+        }
 
     }
 }

@@ -1,5 +1,6 @@
 package dao;
 
+import exceptions.DataBaseException;
 import model.ExchangeRate;
 
 import java.sql.*;
@@ -30,9 +31,10 @@ public class ExchangeRateDAO {
             }
             return exchangeRates;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataBaseException("Failed to fetch data from database", e);
         }
     }
+
 
     public Optional<ExchangeRate> get(int id) {
         String sql = "SELECT * FROM exchange_rates WHERE id = ?";
@@ -44,7 +46,7 @@ public class ExchangeRateDAO {
                 if (resultSet.next()) {
                     int baseCurrencyId = resultSet.getInt("base_currency_id");
                     int targetCurrencyId = resultSet.getInt("target_currency_id");
-                    Double rate = resultSet.getDouble("rate");
+                    double rate = resultSet.getDouble("rate");
                     ExchangeRate exchangeRate = new ExchangeRate(id, baseCurrencyId, targetCurrencyId, rate);
 
                     // optional это такая оберточка которую юзаем что не использовать null
@@ -55,15 +57,15 @@ public class ExchangeRateDAO {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataBaseException("Failed to fetch data from database", e);
         }
-
     }
 
     public OptionalInt add(int baseExchangeId, int targetExchangeId, double rate) {
         String sql = "INSERT INTO exchange_rates (base_currency_id, target_currency_id, rate) VALUES (?, ?, ?)";
         try (Connection connection = manager.connection();
              PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             stmt.setInt(1, baseExchangeId);
             stmt.setInt(2, targetExchangeId);
             stmt.setDouble(3, rate);
@@ -73,23 +75,27 @@ public class ExchangeRateDAO {
             try (ResultSet resultSet = stmt.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     return OptionalInt.of(resultSet.getInt(1));
-                }
+                } else return OptionalInt.empty();
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataBaseException("Failed to add data to database", e);
         }
-        return OptionalInt.empty();
     }
+
+
     public void update(int id, double rate) {
-        String sql = "UPDATE users SET rate = ? WHERE id = ?";
+        String sql = "UPDATE exchange_rates SET rate = ? WHERE id = ?";
         try (Connection connection = manager.connection();
              PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setDouble(1, rate);
+            stmt.setInt(2, id);
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataBaseException("Failed to update data in database", e);
         }
 
     }
+
 }
+
