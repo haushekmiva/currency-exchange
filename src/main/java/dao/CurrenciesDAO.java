@@ -1,6 +1,7 @@
 package dao;
 
 import exceptions.DataBaseException;
+import exceptions.DuplicateResourceException;
 import model.Currency;
 import utils.LogMessageCreator;
 import utils.MessageType;
@@ -49,23 +50,23 @@ public class CurrenciesDAO  {
             return currencies;
         } catch (SQLException e) {
             String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName,
-                    LogMessageCreator.NO_SPECIFIC_ID);
+                    LogMessageCreator.NO_SPECIFIC_CODE);
             throw new DataBaseException(message, e);
         }
     }
 
-    public Optional<Currency> get(int id) {
+    public Optional<Currency> getByCode(String code) {
 
-        String sql = "SELECT * FROM currencies WHERE id = ?"; // запросик для получения записи из бд где id = чему-то
+        String sql = "SELECT * FROM currencies WHERE code = ?"; // запросик для получения записи из бд где id = чему-то
 
         try (Connection connection = manager.connection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
 
             // заполняем вопросики и отправляем запрос
-            stmt.setInt(1, id);
+            stmt.setString(1, code);
 
             try (ResultSet resultSet = stmt.executeQuery()) {
                 if (resultSet.next()) {
-                    String code = resultSet.getString("code");
+                    int id = resultSet.getInt("id");
                     String fullName = resultSet.getString("full_name");
                     String sign = resultSet.getString("sign");
                     Currency currency = new Currency(id, code, fullName, sign);
@@ -75,7 +76,7 @@ public class CurrenciesDAO  {
                 } else return Optional.empty();
             }
         } catch (SQLException e) {
-            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName, id);
+            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName, code);
             throw new DataBaseException(message, e);
         }
 
@@ -97,9 +98,12 @@ public class CurrenciesDAO  {
 
         } catch (SQLException e) {
             String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.ADD, tableName,
-                    LogMessageCreator.NO_SPECIFIC_ID);
-            throw new DataBaseException(message, e);
+                    LogMessageCreator.NO_SPECIFIC_CODE);
+            if ("23505".equals(e.getSQLState())) {
+                throw new DuplicateResourceException(message, e);
+            } else {
+                throw new DataBaseException(message, e);
+            }
         }
-
     }
 }

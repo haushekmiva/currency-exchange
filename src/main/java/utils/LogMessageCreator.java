@@ -1,9 +1,9 @@
 package utils;
 
 public class LogMessageCreator {
-    public static final int NO_SPECIFIC_ID = -1;
+    public static final String NO_SPECIFIC_CODE = "";
 
-    public static String createMessage(MessageType messageType, OperationType operationType, String tableName, int elementId) {
+    public static String createMessage(MessageType messageType, OperationType operationType, String tableName, String elementCode) {
         String message = "";
         switch (messageType) {
             case FAILED -> message += "Failed ";
@@ -20,9 +20,9 @@ public class LogMessageCreator {
         message += tableName + " ";
 
         if (!operationType.equals(OperationType.ADD)) {
-            if (elementId == NO_SPECIFIC_ID) {
+            if (elementCode == NO_SPECIFIC_CODE) {
                 message += "all elements";
-            } else message += "an element with id = " + elementId + " ";
+            } else message += "an element with code = " + elementCode + " ";
         }
 
         return message;

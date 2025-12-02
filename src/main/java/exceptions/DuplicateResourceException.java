@@ -1,16 +1,15 @@
 package exceptions;
 
-public class DataBaseException extends RuntimeException{
-
-    public DataBaseException(String message) {
+public class DuplicateResourceException extends RuntimeException {
+    public DuplicateResourceException(String message) {
         super(message);
     }
 
-    public DataBaseException(String message, Throwable cause) {
+    public DuplicateResourceException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public DataBaseException() {
+    public DuplicateResourceException() {
         super();
     }
 

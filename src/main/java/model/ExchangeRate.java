@@ -2,27 +2,27 @@ package model;
 
 public class ExchangeRate {
     private int id;
-    private int baseCurrencyId;
-    private int targetCurrencyId;
+    private Currency baseCurrency;
+    private Currency targetCurrency;
     private double rate;
 
-    public ExchangeRate(int id, int baseCurrencyId, int targetCurrencyId, double rate) {
+    public ExchangeRate(int id, Currency baseCurrency, Currency targetCurrency, double rate) {
         this.rate = rate;
-        this.targetCurrencyId = targetCurrencyId;
+        this.targetCurrency = targetCurrency;
         this.id = id;
-        this.baseCurrencyId = baseCurrencyId;
+        this.baseCurrency = baseCurrency;
+    }
+
+    public Currency getTargetCurrency() {
+        return targetCurrency;
+    }
+
+    public Currency getBaseCurrency() {
+        return baseCurrency;
     }
 
     public double getRate() {
         return rate;
-    }
-
-    public int getTargetCurrencyId() {
-        return targetCurrencyId;
-    }
-
-    public int getBaseCurrencyId() {
-        return baseCurrencyId;
     }
 
     public int getId() {
@@ -33,8 +33,8 @@ public class ExchangeRate {
     public String toString() {
         return "ExchangeRate{" +
                 "id=" + id +
-                ", baseCurrencyId=" + baseCurrencyId +
-                ", targetCurrencyId=" + targetCurrencyId +
+                ", baseCurrency=" + baseCurrency +
+                ", targetCurrency=" + targetCurrency +
                 ", rate=" + rate +
                 '}';
     }

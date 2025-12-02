@@ -1,6 +1,9 @@
 import dao.CurrenciesDAO;
 import dao.DataBaseManager;
+import dao.ExchangeRateDAO;
+import exceptions.DataBaseException;
 import model.Currency;
+import model.ExchangeRate;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,7 +28,8 @@ public class Main {
                                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 code VARCHAR,
                                 full_name VARCHAR,
-                                sign VARCHAR
+                                sign VARCHAR,
+                                UNIQUE(code)
                             );
                         """);
 
@@ -37,32 +41,28 @@ public class Main {
                                 rate DECIMAL(6),
                                     FOREIGN KEY (base_currency_id) REFERENCES currencies(id),
                                     FOREIGN KEY (target_currency_id) REFERENCES currencies(id)
+                                    UNIQUE(base_currency_id, target_currency_id)
                             );
                         """);
 
             }
 
             DataBaseManager manager = new DataBaseManager(url);
-            CurrenciesDAO currencyDAO = new CurrenciesDAO(manager);
-            OptionalInt id = currencyDAO.add("US", "Dollar US", "$");
-            if (id.isPresent()) {
-                System.out.println(id.getAsInt());
-            } else System.out.println("Error");
+            ExchangeRateDAO erDAO = new ExchangeRateDAO(manager);
+            List<ExchangeRate> rates = erDAO.getAll();
+            System.out.println(rates + "44");
 
+           // try {
+                erDAO.add(1, 2, 13241234);
+            //} catch (DataBaseException e) {
+                //System.out.println(e.getMessage());
+            //}
 
-            Optional<Currency> currency = currencyDAO.get(2);
-            if (currency.isPresent()) {
-                System.out.println(currency.get());
-            } else System.out.println("Nothing");
-
-
-            List<Currency> currencies = currencyDAO.getAll();
-            for (Currency c : currencies) {
-                System.out.println(c);
+            Optional<ExchangeRate> rate = erDAO.getByPair("RUB", "KZH");
+            System.out.println(rate.get());
             }
 
         }
 
 
     }
-}
