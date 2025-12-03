@@ -1,11 +1,8 @@
 package dao;
 
-import exceptions.DataBaseException;
+import exceptions.DataAccessException;
 import exceptions.DuplicateResourceException;
 import model.Currency;
-import utils.LogMessageCreator;
-import utils.MessageType;
-import utils.OperationType;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -13,11 +10,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-public class CurrenciesDAO  {
+public class JbdcCurrencyDao implements CurrencyDao {
     private final DataBaseManager manager;
     private final String tableName = "currencies";
 
-    public CurrenciesDAO(DataBaseManager manager) {
+    public JbdcCurrencyDao(DataBaseManager manager) {
         this.manager = manager;
     }
 
@@ -27,19 +24,16 @@ public class CurrenciesDAO  {
      *
      * @return список объектов Currency
      */
+    @Override
     public List<Currency> getAll() {
         List<Currency> currencies = new ArrayList<>();
 
-        String sql = "SELECT * FROM currencies"; // sql запрос для выбора ВСЕГО из таблицы
+        String sql = "SELECT * FROM currencies";
 
-        // устанавливаем соединение с базой, создаем объект для выполнения запросов и таблица-ответ с курсором
-        // try-catch-resource автоматически закрывает их чтобы не было утечек данных и превышения лимитов бд
         try (Connection connection = manager.connection(); PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet resultSet = stmt.executeQuery()) {
-            // тк курсор появляется за таблицей мы его сдвигаем
-            while (resultSet.next()) {
 
-                // и вытаскиваем каждое поле из записи
+            while (resultSet.next()) {
                 int id = resultSet.getInt("id");
                 String code = resultSet.getString("code");
                 String fullName = resultSet.getString("full_name");
@@ -49,39 +43,36 @@ public class CurrenciesDAO  {
             }
             return currencies;
         } catch (SQLException e) {
-            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName,
-                    LogMessageCreator.NO_SPECIFIC_CODE);
-            throw new DataBaseException(message, e);
+            String message = "Failed to fetch currencies from currencies.";
+            throw new DataAccessException(message, e);
         }
     }
 
+    @Override
     public Optional<Currency> getByCode(String code) {
 
         String sql = "SELECT * FROM currencies WHERE code = ?"; // запросик для получения записи из бд где id = чему-то
 
         try (Connection connection = manager.connection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
 
-            // заполняем вопросики и отправляем запрос
             stmt.setString(1, code);
-
             try (ResultSet resultSet = stmt.executeQuery()) {
                 if (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     String fullName = resultSet.getString("full_name");
                     String sign = resultSet.getString("sign");
                     Currency currency = new Currency(id, code, fullName, sign);
-
-                    // optional это такая оберточка которую юзаем что не использовать null
                     return Optional.of(currency);
                 } else return Optional.empty();
             }
         } catch (SQLException e) {
-            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.GET, tableName, code);
-            throw new DataBaseException(message, e);
+            String message = String.format("Currency %s not found.", code);
+            throw new DataAccessException(message, e);
         }
 
     }
 
+    @Override
     public OptionalInt add(String code, String fullName, String sign) {
         String sql = "INSERT INTO currencies (code, full_name, sign) VALUES (?, ?, ?)";
         try (Connection connection = manager.connection();
@@ -97,12 +88,10 @@ public class CurrenciesDAO  {
             }
 
         } catch (SQLException e) {
-            String message = LogMessageCreator.createMessage(MessageType.FAILED, OperationType.ADD, tableName,
-                    LogMessageCreator.NO_SPECIFIC_CODE);
-            if ("23505".equals(e.getSQLState())) {
-                throw new DuplicateResourceException(message, e);
+            if (e.getMessage().contains("UNIQUE")) {
+                throw new DuplicateResourceException(String.format("Currency %s already exists.", code), e);
             } else {
-                throw new DataBaseException(message, e);
+                throw new DataAccessException(String.format("Failed to add currency %s", code), e);
             }
         }
     }

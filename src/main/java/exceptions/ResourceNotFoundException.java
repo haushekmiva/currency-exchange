@@ -1,6 +1,6 @@
 package exceptions;
 
-public class ResourceNotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends ApplicationException {
 
     /**
      * Конструктор для создания исключения с заданным сообщением.

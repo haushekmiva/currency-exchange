@@ -1,17 +1,15 @@
 package exceptions;
 
-public class DataBaseException extends RuntimeException{
-
-    public DataBaseException(String message) {
+public class ApplicationException extends RuntimeException {
+    public ApplicationException(String message) {
         super(message);
     }
 
-    public DataBaseException(String message, Throwable cause) {
+    public ApplicationException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public DataBaseException() {
-        super();
+    public ApplicationException() {
     }
 
     @Override
