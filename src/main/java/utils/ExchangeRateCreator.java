@@ -1,7 +1,7 @@
 package utils;
 
-import model.Currency;
-import model.ExchangeRate;
+import models.Currency;
+import models.ExchangeRate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

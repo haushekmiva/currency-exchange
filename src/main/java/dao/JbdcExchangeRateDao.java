@@ -3,7 +3,7 @@ package dao;
 import exceptions.DataAccessException;
 import exceptions.DuplicateResourceException;
 import exceptions.ResourceNotFoundException;
-import model.ExchangeRate;
+import models.ExchangeRate;
 import utils.ExchangeRateCreator;
 
 import java.sql.*;

@@ -2,7 +2,7 @@ package dao;
 
 import exceptions.DataAccessException;
 import exceptions.DuplicateResourceException;
-import model.Currency;
+import models.Currency;
 
 import java.sql.*;
 import java.util.ArrayList;

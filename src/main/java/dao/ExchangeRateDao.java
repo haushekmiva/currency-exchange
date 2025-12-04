@@ -1,6 +1,6 @@
 package dao;
 
-import model.ExchangeRate;
+import models.ExchangeRate;
 
 import java.util.List;
 import java.util.Optional;

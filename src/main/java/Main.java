@@ -1,4 +1,5 @@
 import dao.*;
+import service.CurrencyService;
 import utils.DatabaseInitializer;
 
 import java.sql.SQLException;
@@ -13,7 +14,8 @@ public class Main {
         ExchangeRateDao exchangeRateDao = new JbdcExchangeRateDao(manager);
         CurrencyDao currencyDao = new JbdcCurrencyDao(manager);
 
-        currencyDao.add("RUB", "ruurru", "sdf");
+        CurrencyService currencyService = new CurrencyService(new JbdcCurrencyDao(manager));
+        System.out.println(currencyService.addCurrency("USB", "USB COIN", "USB$"));
 
     }
 
