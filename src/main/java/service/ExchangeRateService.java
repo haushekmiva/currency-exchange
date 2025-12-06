@@ -74,8 +74,7 @@ public class ExchangeRateService {
 
         int exchangeRateId = exchangeRateDao.add(basicCurrency.getId(), targetCurrency.getId(), rate);
 
-        ExchangeRate exchangeRate = new ExchangeRate(exchangeRateId, basicCurrency, targetCurrency, rate);
-        return exchangeRate;
+        return new ExchangeRate(exchangeRateId, basicCurrency, targetCurrency, rate);
     }
 
     public ExchangeRate updateExchangeRates(String baseCurrencyCode, String targetCurrencyCode, double rate) {

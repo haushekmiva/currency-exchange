@@ -9,6 +9,9 @@ import java.sql.Statement;
 
 public class DatabaseInitializer {
 
+    private DatabaseInitializer() {
+    }
+
     public static void init(DataBaseManager manager) throws SQLException{
 
         try (Connection connection = manager.connection()) { // подключение к бд

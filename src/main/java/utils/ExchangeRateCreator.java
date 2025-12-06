@@ -8,6 +8,9 @@ import java.sql.SQLException;
 
 public class ExchangeRateCreator {
 
+    private ExchangeRateCreator() {
+    }
+
     public static ExchangeRate create(ResultSet resultSet) throws SQLException {
         int exchangeRateId = resultSet.getInt("exchange_rate_id");
 
