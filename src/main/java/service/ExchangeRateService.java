@@ -27,13 +27,13 @@ public class ExchangeRateService {
     }
 
     private static ExchangeResult getIndirectExchange(ExchangeRate baseToUsd, ExchangeRate targetToUsd, double amount) {
-        double basicCurrencyRate = baseToUsd.getRate();
-        double targetCurrencyRate = targetToUsd.getRate();
+        double basicCurrencyRate = baseToUsd.rate();
+        double targetCurrencyRate = targetToUsd.rate();
         double rate = targetCurrencyRate / basicCurrencyRate;
         double convertedAmount = amount * rate;
 
-        return new ExchangeResult(baseToUsd.getTargetCurrency(),
-                targetToUsd.getTargetCurrency(), rate, amount, convertedAmount);
+        return new ExchangeResult(baseToUsd.targetCurrency(),
+                targetToUsd.targetCurrency(), rate, amount, convertedAmount);
     }
 
     private static void validatePositive(double number) {
@@ -72,7 +72,7 @@ public class ExchangeRateService {
                 () -> new ResourceNotFoundException(String.format("Currency with code %s not found.", targetCurrencyCode))
         );
 
-        int exchangeRateId = exchangeRateDao.add(basicCurrency.getId(), targetCurrency.getId(), rate);
+        int exchangeRateId = exchangeRateDao.add(basicCurrency.id(), targetCurrency.id(), rate);
 
         return new ExchangeRate(exchangeRateId, basicCurrency, targetCurrency, rate);
     }
@@ -89,7 +89,7 @@ public class ExchangeRateService {
                 () -> new ResourceNotFoundException(String.format("Currency with code %s not found.", targetCurrencyCode))
         );
 
-        exchangeRateDao.update(basicCurrency.getId(), targetCurrency.getId(), rate);
+        exchangeRateDao.update(basicCurrency.id(), targetCurrency.id(), rate);
 
         Optional<ExchangeRate> exchangeRate = exchangeRateDao.getByPair(baseCurrencyCode, targetCurrencyCode);
 
@@ -112,16 +112,16 @@ public class ExchangeRateService {
         Optional<ExchangeRate> directRate = exchangeRateDao.getByPair(baseCurrencyCode, targetCurrencyCode);
         if (directRate.isPresent()) {
             ExchangeRate er = directRate.get();
-            double rate = er.getRate();
-            return calculateExchange(er.getBaseCurrency(), er.getTargetCurrency(), rate, amount);
+            double rate = er.rate();
+            return calculateExchange(er.baseCurrency(), er.targetCurrency(), rate, amount);
         }
 
         // second method
         Optional<ExchangeRate> inverseRate = exchangeRateDao.getByPair(targetCurrencyCode, baseCurrencyCode);
         if (inverseRate.isPresent()) {
             ExchangeRate er = inverseRate.get();
-            double rate = 1.0 / er.getRate();
-            return calculateExchange(er.getBaseCurrency(), er.getTargetCurrency(), rate, amount);
+            double rate = 1.0 / er.rate();
+            return calculateExchange(er.baseCurrency(), er.targetCurrency(), rate, amount);
         }
 
         // third method
