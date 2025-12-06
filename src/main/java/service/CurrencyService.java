@@ -7,12 +7,10 @@ import models.Currency;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.concurrent.RejectedExecutionException;
 
 
 public class CurrencyService {
-    final CurrencyDao currencyDao;
+    private final CurrencyDao currencyDao;
 
     public CurrencyService(CurrencyDao currencyDao) {
         this.currencyDao = currencyDao;
@@ -26,10 +24,10 @@ public class CurrencyService {
         Optional<Currency> currency = currencyDao.getByCode(code);
         return currency
                 .orElseThrow(() -> new ResourceNotFoundException(
-                        String.format("Currency with code %s wasn't found.", code)));
+                        String.format("Currency with code %s not found.", code)));
     }
 
-    public OptionalInt addCurrency(String code, String fullName, String sign) {
+    public Currency addCurrency(String code, String fullName, String sign) {
 
         //------временная заглушка, неоптимизированная валидация------
         if (isNotValid(code, "^[A-Z]{3}$")) {
@@ -45,12 +43,8 @@ public class CurrencyService {
         }
         //-----------------------------------------------------------
 
-        OptionalInt generated_keys = currencyDao.add(code, fullName, sign);
-        if (generated_keys.isPresent()) {
-            return generated_keys;
-        } else {
-            return OptionalInt.empty();
-        }
+        Currency currency = currencyDao.add(code, fullName, sign);
+        return currency;
     }
 
     private boolean isNotValid(String string, String regex) {

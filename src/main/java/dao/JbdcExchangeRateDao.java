@@ -72,7 +72,6 @@ public class JbdcExchangeRateDao implements ExchangeRateDao {
                 JOIN currencies tc ON er.target_currency_id = tc.id
                 WHERE bc.code = ? AND tc.code = ?
                 """;
-
         try (Connection connection = manager.connection(); PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, baseCurrencyCode);
             stmt.setString(2, targetCurrencyCode);
@@ -94,7 +93,7 @@ public class JbdcExchangeRateDao implements ExchangeRateDao {
     }
 
     @Override
-    public OptionalInt add(int baseCurrencyId, int targetCurrencyId, double rate) {
+    public int add(int baseCurrencyId, int targetCurrencyId, double rate) {
         String sql = "INSERT INTO exchange_rates (base_currency_id, target_currency_id, rate) VALUES (?, ?, ?)";
         try (Connection connection = manager.connection();
              PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -106,8 +105,8 @@ public class JbdcExchangeRateDao implements ExchangeRateDao {
             stmt.executeUpdate();
             try (ResultSet resultSet = stmt.getGeneratedKeys()) {
                 if (resultSet.next()) {
-                    return OptionalInt.of(resultSet.getInt(1));
-                } else return OptionalInt.empty();
+                    return resultSet.getInt(1);
+                } else throw new DataAccessException("Failed to retrieve generated ID after inserting exchange rate.");
             }
 
         } catch (SQLException e) {

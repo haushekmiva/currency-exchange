@@ -11,7 +11,7 @@ public interface ExchangeRateDao {
 
     Optional<ExchangeRate> getByPair(String baseCurrencyCode, String targetCurrencyCode);
 
-    OptionalInt add(int baseCurrencyId, int targetCurrencyId, double rate);
+    int add(int baseCurrencyId, int targetCurrencyId, double rate);
 
     void update(int baseCurrencyId, int targetCurrencyId, double rate);
 }

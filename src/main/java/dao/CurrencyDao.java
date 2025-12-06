@@ -11,5 +11,5 @@ public interface CurrencyDao {
 
     Optional<Currency> getByCode(String code);
 
-    OptionalInt add(String code, String fullName, String sign);
+    Currency add(String code, String fullName, String sign);
 }

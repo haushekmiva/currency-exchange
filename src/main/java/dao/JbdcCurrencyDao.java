@@ -73,7 +73,7 @@ public class JbdcCurrencyDao implements CurrencyDao {
     }
 
     @Override
-    public OptionalInt add(String code, String fullName, String sign) {
+    public Currency add(String code, String fullName, String sign) {
         String sql = "INSERT INTO currencies (code, full_name, sign) VALUES (?, ?, ?)";
         try (Connection connection = manager.connection();
              PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -83,8 +83,10 @@ public class JbdcCurrencyDao implements CurrencyDao {
             stmt.executeUpdate();
             try (ResultSet resultSet = stmt.getGeneratedKeys()) {
                 if (resultSet.next()) {
-                    return OptionalInt.of(resultSet.getInt(1));
-                } else return OptionalInt.empty();
+                    int id = resultSet.getInt(1);
+                    Currency currency = new Currency(id, code, fullName, sign);
+                    return currency;
+                } else throw new DataAccessException("Failed to retrieve generated ID after inserting currency.");
             }
 
         } catch (SQLException e) {
