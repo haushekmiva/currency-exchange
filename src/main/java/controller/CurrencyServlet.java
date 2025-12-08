@@ -46,7 +46,7 @@ public class CurrencyServlet extends HttpServlet {
         String currencyCode = request.getParameter("code");
         String currencySign = request.getParameter("sign");
 
-        // TODO: сделать валидацию на наличие и пустоту
+        // TODO: сделать валидацию на наличие и пустоту + приводимость типов к double
 
         Currency currency = currencyService.addCurrency(currencyCode, currencyName, currencySign);
 
