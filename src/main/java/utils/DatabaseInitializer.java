@@ -3,7 +3,6 @@ package utils;
 import dao.DataBaseManager;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -12,7 +11,7 @@ public class DatabaseInitializer {
     private DatabaseInitializer() {
     }
 
-    public static void init(DataBaseManager manager) throws SQLException{
+    public static void init(DataBaseManager manager) {
 
         try (Connection connection = manager.connection()) { // подключение к бд
 
@@ -44,6 +43,9 @@ public class DatabaseInitializer {
 
             }
 
+        } catch (SQLException e) {
+            throw new RuntimeException("Error occurred while initializing the database." + e.getMessage());
         }
+
     }
 }

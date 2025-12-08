@@ -1,9 +1,12 @@
 package utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import exceptions.ReadFromJsonException;
 import exceptions.WriteToJsonException;
+
+import java.util.List;
 
 public final class JsonMapper {
 
@@ -12,7 +15,7 @@ public final class JsonMapper {
     private JsonMapper() {
     }
 
-    public <T> String toJson(T object) {
+    public static <T> String toJson(T object) {
         try {
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
@@ -20,11 +23,26 @@ public final class JsonMapper {
         }
     }
 
-    public <T> T fromJson(String json, Class<T> clazz) {
+    public static <T> T fromJson(String json, Class<T> clazz) {
         try {
             return mapper.readValue(json, clazz);
         } catch (JsonProcessingException e) {
             throw new ReadFromJsonException("Failed to deserialize JSON into DTO.", e);
         }
     }
+
+    // понять как работает я хз
+    public static <T> List<T> fromJsonList(String json, Class<T> elementClass) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            // TypeFactory помогает Jackson понять что это List<T>
+            JavaType type = mapper.getTypeFactory()
+                    .constructCollectionType(List.class, elementClass);
+            return mapper.readValue(json, type);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Failed to parse JSON list", e);
+        }
+    }
 }
+
+

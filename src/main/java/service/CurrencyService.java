@@ -31,15 +31,15 @@ public class CurrencyService {
 
         //------временная заглушка, неоптимизированная валидация------
         if (isNotValid(code, "^[A-Z]{3}$")) {
-            throw new InputException("Currency code is incorrect.");
+            throw new InputException("Currency code must have 3 symbols.");
         }
 
-        if (isNotValid(fullName, "^[a-zA-Z0-9\s]{3,10}$")) {
-            throw new InputException("Currency full name is incorrect");
+        if (isNotValid(fullName, "^[a-zA-Z0-9\s]{3,20}$")) {
+            throw new InputException("Currency full name must have from 3 to 20 symbols.");
         }
 
         if (isNotValid(sign, "^.{1,5}$")) {
-            throw new InputException("Currency sign is incorrect");
+            throw new InputException("Currency sign must have from 1 to 5 symbols.");
         }
         //-----------------------------------------------------------
 
