@@ -9,11 +9,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
 import service.CurrencyService;
 import utils.JsonMapper;
+import validation.GetCurrencyPathValidator;
 import validation.PreconditionValidator;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
+import java.util.Optional;
 
 @WebServlet("/currency/*")
 public class CurrencyServlet extends HttpServlet {
@@ -26,15 +27,17 @@ public class CurrencyServlet extends HttpServlet {
         this.currencyService = (CurrencyService) ctx.getAttribute("currencyService");
     }
 
-    // TODO: сделать рефактор. вынести проверку пути в отдельную утилиту. разобраться с выбросом исключения при отправки хуйни.
+    // TODO: разобраться с выбросом исключения при отправки хуйни.
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String pathInfo = request.getPathInfo();
+        String path = request.getPathInfo();
+        Optional<String> currencyCodeOptional = GetCurrencyPathValidator.extractCurrencyCode(path);
 
-        if (pathInfo != null && pathInfo.length() > 1) {
-            String[] pathParts = pathInfo.split("/");
-            if (pathParts.length == 2) {
-                String currencyCode = pathParts[1];
+        if (currencyCodeOptional.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found at this path."); // 404
+            return;
+        }
+                String currencyCode = currencyCodeOptional.get();
                 PreconditionValidator.validateGetCurrencyArguments(currencyCode);
 
                 response.setContentType("application/json");
@@ -46,11 +49,6 @@ public class CurrencyServlet extends HttpServlet {
                 PrintWriter printWriter = response.getWriter();
                 printWriter.print(jsonResponse);
                 printWriter.close();
-            }
-        } else {
-            response.sendError(404, "Page not found.");
+
         }
-
     }
-
-}
