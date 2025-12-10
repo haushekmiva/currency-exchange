@@ -1,17 +1,18 @@
 package utils;
 
-import dao.DataBaseManager;
+
+import db.DataBaseManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DatabaseInitializer {
+public final class DatabaseInitializer {
 
     private DatabaseInitializer() {
     }
 
-    public static void init(DataBaseManager manager) {
+    public static void init(DataBaseManager manager) throws ClassNotFoundException {
 
         try (Connection connection = manager.connection()) { // подключение к бд
 

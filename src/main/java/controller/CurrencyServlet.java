@@ -1,5 +1,6 @@
 package controller;
 
+import extractors.PathExtractor;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,7 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
 import service.CurrencyService;
 import utils.JsonMapper;
-import utils.GetCurrencyPathExtractor;
+
 import static validation.FormatValidationUtils.checkNotEmpty;
 
 import java.io.IOException;
@@ -27,17 +28,16 @@ public class CurrencyServlet extends HttpServlet {
         this.currencyService = (CurrencyService) ctx.getAttribute("currencyService");
     }
 
-    // TODO: разобраться с выбросом исключения при отправки хуйни.
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = request.getPathInfo();
-        Optional<String> currencyCodeOptional = GetCurrencyPathExtractor.extractCurrencyCode(path);
+        Optional<String> userInput = PathExtractor.extractFirstPathSegment(path);
 
-        if (currencyCodeOptional.isEmpty()) {
+        if (userInput.isEmpty()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found at this path."); // 404
             return;
         }
-                String currencyCode = currencyCodeOptional.get();
+                String currencyCode = userInput.get();
                 checkNotEmpty(currencyCode, "code");
 
                 response.setContentType("application/json");
@@ -46,9 +46,8 @@ public class CurrencyServlet extends HttpServlet {
                 Currency currency = currencyService.getCurrencyByCode(currencyCode);
                 String jsonResponse = JsonMapper.toJson(currency);
 
-                PrintWriter printWriter = response.getWriter();
-                printWriter.print(jsonResponse);
-                printWriter.close();
-
+                try (PrintWriter printWriter = response.getWriter()) {
+                    printWriter.print(jsonResponse);
+                }
         }
     }

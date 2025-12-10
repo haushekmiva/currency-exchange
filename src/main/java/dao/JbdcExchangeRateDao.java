@@ -1,5 +1,6 @@
 package dao;
 
+import db.DataBaseManager;
 import exceptions.DataAccessException;
 import exceptions.DuplicateResourceException;
 import exceptions.ResourceNotFoundException;
@@ -10,7 +11,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 public class JbdcExchangeRateDao implements ExchangeRateDao {
     private final DataBaseManager manager;

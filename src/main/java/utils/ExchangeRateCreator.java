@@ -6,7 +6,7 @@ import models.ExchangeRate;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ExchangeRateCreator {
+public final class ExchangeRateCreator {
 
     private ExchangeRateCreator() {
     }

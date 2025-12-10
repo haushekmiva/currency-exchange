@@ -1,5 +1,6 @@
 package dao;
 
+import db.DataBaseManager;
 import exceptions.DataAccessException;
 import exceptions.DuplicateResourceException;
 import models.Currency;
@@ -8,7 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 public class JbdcCurrencyDao implements CurrencyDao {
     private final DataBaseManager manager;

@@ -1,10 +1,10 @@
-package utils;
+package extractors;
 
 import java.util.Optional;
 
-public class GetCurrencyPathExtractor {
+public class PathExtractor {
 
-    public static Optional<String> extractCurrencyCode(String path) {
+    public static Optional<String> extractFirstPathSegment(String path) {
         if (path != null && path.length() > 1) {
             String[] pathParts = path.split("/");
             if (pathParts.length == 2 && !pathParts[1].isBlank()) {
@@ -13,4 +13,5 @@ public class GetCurrencyPathExtractor {
         }
         return Optional.empty();
     }
+
 }

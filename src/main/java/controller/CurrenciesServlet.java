@@ -35,9 +35,9 @@ public class CurrenciesServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        PrintWriter printWriter = response.getWriter();
-        printWriter.print(jsonResponse);
-        printWriter.close();
+        try (PrintWriter printWriter = response.getWriter()) {
+            printWriter.print(jsonResponse);
+        }
     }
 
     @Override
@@ -57,9 +57,9 @@ public class CurrenciesServlet extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        PrintWriter printWriter = response.getWriter();
-        printWriter.print(jsonResponse);
-        printWriter.close();
+        try (PrintWriter printWriter = response.getWriter()) {
+            printWriter.print(jsonResponse);
+        }
     }
 }
 

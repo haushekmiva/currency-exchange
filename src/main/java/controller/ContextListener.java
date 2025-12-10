@@ -1,6 +1,7 @@
 package controller;
 
 import dao.*;
+import db.DataBaseManager;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
@@ -15,8 +16,8 @@ public class ContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            // 1. !!! САМОЕ ГЛАВНОЕ: ПРИНУДИТЕЛЬНО ЗАГРУЖАЕМ ДРАЙВЕР !!!
-            // Без этой строки Tomcat часто "не видит" драйвер в WEB-INF/lib
+            // 1. !!! САМОЕ ГЛАВНОЕ: ПРИНУДИТЕЛЬНО ПОДГРУЖАЕМ ДРАЙВЕР ДЛЯ РАБОТЫ С БД !!!
+            // Без этой строки Tomcat часто не видит драйвер в WEB-INF/lib
             Class.forName("org.sqlite.JDBC");
 
             // 2. Получаем правильный путь к БД (как обсуждали раньше)
@@ -27,11 +28,11 @@ public class ContextListener implements ServletContextListener {
 
             // Фолбэк: если absolutePath null (бывает в некоторых конфигах),
             // используем временный файл или жесткий путь для теста, но пока пробуем так:
-            String dbUrl = (absolutePath != null)
-                    ? "jdbc:sqlite:" + absolutePath
-                    : "jdbc:sqlite:C:/Temp/data.db"; // На крайний случай, если путь не найдется
+            String dbUrl;
+            if (absolutePath != null) {
+                dbUrl = "jdbc:sqlite:" + absolutePath;
+            } else dbUrl = "jdbc:sqlite:C:/Temp/data.db"; // На крайний случай, если путь не найдется
 
-            System.out.println("=== DB URL: " + dbUrl + " ==="); // Смотрим в логи, какой путь получился
 
             DataBaseManager manager = new DataBaseManager(dbUrl);
             DatabaseInitializer.init(manager);
