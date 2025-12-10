@@ -7,10 +7,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
-import models.CurrencyCreationRequest;
 import service.CurrencyService;
 import utils.JsonMapper;
-import validation.PreconditionValidator;
+import static validation.FormatValidationUtils.checkNotEmpty;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -48,10 +47,9 @@ public class CurrenciesServlet extends HttpServlet {
         String currencyCode = request.getParameter("code");
         String currencySign = request.getParameter("sign");
 
-
-        PreconditionValidator.validateCreateCurrencyArguments(
-                new CurrencyCreationRequest(currencyName, currencyCode, currencySign)
-        );
+        checkNotEmpty(currencyName, "name");
+        checkNotEmpty(currencyCode, "code");
+        checkNotEmpty(currencySign, "sign");
 
         Currency currency = currencyService.addCurrency(currencyCode, currencyName, currencySign);
 

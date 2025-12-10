@@ -1,8 +1,8 @@
-package validation;
+package utils;
 
 import java.util.Optional;
 
-public class GetCurrencyPathValidator {
+public class GetCurrencyPathExtractor {
 
     public static Optional<String> extractCurrencyCode(String path) {
         if (path != null && path.length() > 1) {

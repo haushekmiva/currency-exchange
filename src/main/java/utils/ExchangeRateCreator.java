@@ -26,8 +26,8 @@ public class ExchangeRateCreator {
 
         double rate = resultSet.getDouble("rate");
 
-        Currency baseCurrency = new Currency(baseCurrencyId, baseCurrencyCode, baseCurrencyFullName, baseCurrencySign);
-        Currency targetCurrency = new Currency(targetCurrencyId, targetCurrencyCode, targetCurrencyFullName, targetCurrencySign);
+        Currency baseCurrency = new Currency(baseCurrencyId, baseCurrencyFullName, baseCurrencyCode, baseCurrencySign);
+        Currency targetCurrency = new Currency(targetCurrencyId,targetCurrencyFullName, targetCurrencyCode,  targetCurrencySign);
         ExchangeRate exchangeRate = new ExchangeRate(exchangeRateId, baseCurrency, targetCurrency, rate);
 
         return exchangeRate;

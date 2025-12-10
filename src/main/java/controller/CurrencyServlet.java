@@ -9,8 +9,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
 import service.CurrencyService;
 import utils.JsonMapper;
-import validation.GetCurrencyPathValidator;
-import validation.PreconditionValidator;
+import utils.GetCurrencyPathExtractor;
+import static validation.FormatValidationUtils.checkNotEmpty;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,14 +31,14 @@ public class CurrencyServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = request.getPathInfo();
-        Optional<String> currencyCodeOptional = GetCurrencyPathValidator.extractCurrencyCode(path);
+        Optional<String> currencyCodeOptional = GetCurrencyPathExtractor.extractCurrencyCode(path);
 
         if (currencyCodeOptional.isEmpty()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found at this path."); // 404
             return;
         }
                 String currencyCode = currencyCodeOptional.get();
-                PreconditionValidator.validateGetCurrencyArguments(currencyCode);
+                checkNotEmpty(currencyCode, "code");
 
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
