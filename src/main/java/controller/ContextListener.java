@@ -33,6 +33,7 @@ public class ContextListener implements ServletContextListener {
                 dbUrl = "jdbc:sqlite:" + absolutePath;
             } else dbUrl = "jdbc:sqlite:C:/Temp/data.db"; // На крайний случай, если путь не найдется
 
+            System.out.println(dbUrl);
 
             DataBaseManager manager = new DataBaseManager(dbUrl);
             DatabaseInitializer.init(manager);

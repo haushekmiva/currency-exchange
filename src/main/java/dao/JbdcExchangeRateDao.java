@@ -14,8 +14,6 @@ import java.util.Optional;
 
 public class JbdcExchangeRateDao implements ExchangeRateDao {
     private final DataBaseManager manager;
-    private final String tableName = "exchange_rates"; // потом внести в конфиг
-
 
     public JbdcExchangeRateDao(DataBaseManager manager) {
         this.manager = manager;

@@ -70,7 +70,7 @@ public class ExchangeRateServlet extends HttpServlet {
         Optional<String> pathSegment = PathExtractor.extractFirstPathSegment(path);
 
         if (pathSegment.isEmpty()) {
-            throw new ResourceNotFoundException("Resource not found.");
+            throw new InputException("Currencies codes required.");
         }
 
         String currenciesCodes = pathSegment.get();

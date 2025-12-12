@@ -50,6 +50,8 @@ public class ExchangeRateService {
 
     public ExchangeRate addExchangeRate(String baseCurrencyCode, String targetCurrencyCode, double rate) {
 
+        validateCurrencyCode(baseCurrencyCode);
+        validateCurrencyCode(targetCurrencyCode);
         validateRate(rate);
 
         Currency basicCurrency = currencyDao.getByCode(baseCurrencyCode).orElseThrow(
@@ -95,6 +97,8 @@ public class ExchangeRateService {
         validateCurrencyCode(baseCurrencyCode);
         validateCurrencyCode(targetCurrencyCode);
         validateRate(amount);
+
+
 
         // first method
         Optional<ExchangeRate> directRate = exchangeRateDao.getByPair(baseCurrencyCode, targetCurrencyCode);

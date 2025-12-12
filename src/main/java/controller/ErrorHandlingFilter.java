@@ -17,8 +17,7 @@ import jakarta.servlet.Filter;
 @WebFilter("/*")
 public class ErrorHandlingFilter implements Filter {
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         try {

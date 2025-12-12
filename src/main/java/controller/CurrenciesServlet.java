@@ -46,6 +46,7 @@ public class CurrenciesServlet extends HttpServlet {
 
         Currency currency = currencyService.addCurrency(currencyCode, currencyName, currencySign);
 
+        response.setStatus(HttpServletResponse.SC_CREATED);
         sendResponse(response, currency);
     }
 }

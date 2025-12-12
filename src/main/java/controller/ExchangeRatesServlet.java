@@ -46,6 +46,7 @@ public class ExchangeRatesServlet extends HttpServlet {
 
         ExchangeRate exchangeRate = exchangeRateService.addExchangeRate(baseCurrencyCode, targetCurrencyCode, rate);
 
+        response.setStatus(HttpServletResponse.SC_CREATED);
         sendResponse(response, exchangeRate);
     }
 

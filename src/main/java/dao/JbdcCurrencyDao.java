@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public class JbdcCurrencyDao implements CurrencyDao {
     private final DataBaseManager manager;
-    private final String tableName = "currencies";
 
     public JbdcCurrencyDao(DataBaseManager manager) {
         this.manager = manager;

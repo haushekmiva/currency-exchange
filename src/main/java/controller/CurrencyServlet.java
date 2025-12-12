@@ -1,5 +1,6 @@
 package controller;
 
+import exceptions.InputException;
 import extractors.PathExtractor;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
@@ -33,8 +34,7 @@ public class CurrencyServlet extends HttpServlet {
         Optional<String> userInput = PathExtractor.extractFirstPathSegment(path);
 
         if (userInput.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found at this path."); // 404
-            return;
+            throw new InputException("Currency code is required in the address.");
         }
         String currencyCode = userInput.get();
         checkNotEmpty(currencyCode, "code");
