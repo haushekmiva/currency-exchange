@@ -12,6 +12,9 @@ import models.ExchangeResult;
 import java.util.List;
 import java.util.Optional;
 
+import static validation.BusinessValidationUtils.validateCurrencyCode;
+import static validation.BusinessValidationUtils.validateRate;
+
 public class ExchangeRateService {
     private final CurrencyDao currencyDao;
     private final ExchangeRateDao exchangeRateDao;
@@ -36,20 +39,6 @@ public class ExchangeRateService {
                 targetToUsd.targetCurrency(), rate, amount, convertedAmount);
     }
 
-    private static void validatePositive(double number) {
-        if (number < 0.0) {
-            throw new InputException("Rate must be more than 0.");
-        }
-    }
-
-    private static void validateCurrencyCode(String currencyCode) {
-
-        if (currencyCode.length() != 3) {
-            throw new InputException("Currency code must have 3 symbols.");
-        }
-
-    }
-
     public List<ExchangeRate> getExchangeRates() {
         return exchangeRateDao.getAll();
     }
@@ -62,7 +51,7 @@ public class ExchangeRateService {
 
     public ExchangeRate addExchangeRate(String baseCurrencyCode, String targetCurrencyCode, double rate) {
 
-        validatePositive(rate);
+        validateRate(rate);
 
         Currency basicCurrency = currencyDao.getByCode(baseCurrencyCode).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Currency with code %s not found.", baseCurrencyCode))
@@ -79,7 +68,7 @@ public class ExchangeRateService {
 
     public ExchangeRate updateExchangeRates(String baseCurrencyCode, String targetCurrencyCode, double rate) {
 
-        validatePositive(rate);
+        validateRate(rate);
 
         Currency basicCurrency = currencyDao.getByCode(baseCurrencyCode).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Currency with code %s not found.", baseCurrencyCode))
@@ -106,7 +95,7 @@ public class ExchangeRateService {
         // validation
         validateCurrencyCode(baseCurrencyCode);
         validateCurrencyCode(targetCurrencyCode);
-        validatePositive(amount);
+        validateRate(amount);
 
         // first method
         Optional<ExchangeRate> directRate = exchangeRateDao.getByPair(baseCurrencyCode, targetCurrencyCode);

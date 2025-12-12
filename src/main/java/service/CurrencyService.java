@@ -8,6 +8,8 @@ import models.Currency;
 import java.util.List;
 import java.util.Optional;
 
+import static validation.BusinessValidationUtils.*;
+
 
 public class CurrencyService {
     private final CurrencyDao currencyDao;
@@ -22,12 +24,7 @@ public class CurrencyService {
 
     public Currency getCurrencyByCode(String code) {
 
-        //------временная заглушка, неоптимизированная валидация------
-        if (isNotValid(code, "^[A-Z]{3}$")) {
-            throw new InputException("Currency code must have 3 symbols in upper-case.");
-        }
-        //------------------------------------------------------------
-
+        validateCurrencyCode(code);
         Optional<Currency> currency = currencyDao.getByCode(code);
         return currency
                 .orElseThrow(() -> new ResourceNotFoundException(
@@ -36,16 +33,9 @@ public class CurrencyService {
 
     public Currency addCurrency(String code, String fullName, String sign) {
 
-
-
-        if (isNotValid(fullName, "^[a-zA-Z0-9\s]{3,20}$")) {
-            throw new InputException("Currency full name must have from 3 to 20 symbols.");
-        }
-
-        if (isNotValid(sign, "^.{1,5}$")) {
-            throw new InputException("Currency sign must have from 1 to 5 symbols.");
-        }
-        //------------------------------------------------------------
+        validateCurrencyCode(code);
+        validateCurrencyFullName(fullName);
+        validateCurrencySign(sign);
 
         Currency currency = currencyDao.add(code, fullName, sign);
         return currency;
