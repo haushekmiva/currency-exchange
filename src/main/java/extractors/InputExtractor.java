@@ -5,9 +5,11 @@ import exceptions.InputException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Optional;
 
+/**
+ * В этом классе есть семантическая ошибка. Один метод выкидывает искл., а другой кидает null.
+ * Я понимаю и осознаю косяк, но не знаю как его исправить тк не хочу плодить много схожих классов
+ */
 public class InputExtractor {
 
     public static double extractDouble(String string, String argumentName) {
@@ -18,7 +20,7 @@ public class InputExtractor {
         }
     }
 
-    // name=RUB&code=RUB&sign=R&rate=7
+    // возвращает null, чтобы подстроиться под стандартный .getParameter
     public static String extractArgumentFromInputStream(InputStream inputStream, String argumentName) throws IOException {
         String userArguments = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         String[] argumentsSeparated = userArguments.split("&");

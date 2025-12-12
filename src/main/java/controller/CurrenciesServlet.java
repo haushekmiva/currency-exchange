@@ -28,7 +28,7 @@ public class CurrenciesServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
         List<Currency> currencies = currencyService.getAllCurrencies();
 
         String jsonResponse = JsonMapper.toJson(currencies);
@@ -42,7 +42,6 @@ public class CurrenciesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        request.setCharacterEncoding("UTF-8");
         String currencyName = request.getParameter("name");
         String currencyCode = request.getParameter("code");
         String currencySign = request.getParameter("sign");

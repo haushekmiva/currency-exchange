@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import models.ExchangeRate;
 import service.ExchangeRateService;
 import utils.JsonMapper;
+
+import static utils.ResponseSender.sendResponse;
 import static validation.FormatValidationUtils.checkNotEmpty;
 
 import java.io.IOException;
@@ -41,6 +43,20 @@ public class ExchangeRatesServlet extends HttpServlet {
 
     }
 
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String baseCurrencyCode = request.getParameter("baseCurrencyCode");
+        String targetCurrencyCode = request.getParameter("targetCurrencyCode");
+        String rateRaw = request.getParameter("rate");
 
+        checkNotEmpty(baseCurrencyCode, "baseCurrencyCode");
+        checkNotEmpty(targetCurrencyCode, "targetCurrencyCode");
+        checkNotEmpty(rateRaw, "rate");
+        double rate = InputExtractor.extractDouble(rateRaw, "rate");
+
+        ExchangeRate exchangeRate = exchangeRateService.addExchangeRate(baseCurrencyCode, targetCurrencyCode, rate);
+
+        sendResponse(response, exchangeRate);
+    }
 
 }
