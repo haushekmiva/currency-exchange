@@ -3,7 +3,6 @@ package service;
 import dao.CurrencyDao;
 import dao.ExchangeRateDao;
 import exceptions.ApplicationException;
-import exceptions.InputException;
 import exceptions.ResourceNotFoundException;
 import models.Currency;
 import models.ExchangeRate;

@@ -6,4 +6,5 @@ public record ExchangeRate(
         Currency baseCurrency,
         Currency targetCurrency,
         double rate
-) {}
+) {
+}

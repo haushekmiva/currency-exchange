@@ -4,7 +4,6 @@ import models.ExchangeRate;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalInt;
 
 public interface ExchangeRateDao {
     List<ExchangeRate> getAll();

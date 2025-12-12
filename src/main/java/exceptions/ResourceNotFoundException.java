@@ -4,6 +4,7 @@ public class ResourceNotFoundException extends ApplicationException {
 
     /**
      * Конструктор для создания исключения с заданным сообщением.
+     *
      * @param message Подробное сообщение об ошибке (например, "Продукт с ID 123 не найден").
      */
     public ResourceNotFoundException(String message) {
@@ -14,8 +15,9 @@ public class ResourceNotFoundException extends ApplicationException {
      * Конструктор для создания исключения с сообщением и корневой причиной.
      * Обычно используется, когда вы перехватываете другое (низкоуровневое) исключение
      * и оборачиваете его в это прикладное исключение.
+     *
      * @param message Подробное сообщение об ошибке.
-     * @param cause Корневое исключение, вызвавшее данное исключение.
+     * @param cause   Корневое исключение, вызвавшее данное исключение.
      */
     public ResourceNotFoundException(String message, Throwable cause) {
         super(message, cause);

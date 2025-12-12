@@ -9,13 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
 import service.CurrencyService;
-import utils.JsonMapper;
-
-import static validation.FormatValidationUtils.checkNotEmpty;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Optional;
+
+import static utils.ResponseSender.sendResponse;
+import static validation.FormatValidationUtils.checkNotEmpty;
 
 @WebServlet("/currency/*")
 public class CurrencyServlet extends HttpServlet {
@@ -37,17 +36,10 @@ public class CurrencyServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Resource not found at this path."); // 404
             return;
         }
-                String currencyCode = userInput.get();
-                checkNotEmpty(currencyCode, "code");
+        String currencyCode = userInput.get();
+        checkNotEmpty(currencyCode, "code");
+        Currency currency = currencyService.getCurrencyByCode(currencyCode);
 
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-
-                Currency currency = currencyService.getCurrencyByCode(currencyCode);
-                String jsonResponse = JsonMapper.toJson(currency);
-
-                try (PrintWriter printWriter = response.getWriter()) {
-                    printWriter.print(jsonResponse);
-                }
-        }
+        sendResponse(response, currency);
     }
+}

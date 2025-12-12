@@ -6,4 +6,5 @@ public record ExchangeResult(
         double rate,
         double amount,
         double convertedAmount
-) {}
+) {
+}

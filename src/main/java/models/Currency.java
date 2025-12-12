@@ -5,4 +5,5 @@ public record Currency(
         String fullName,
         String code,
         String sign
-) {}
+) {
+}

@@ -1,6 +1,9 @@
 package controller;
 
-import dao.*;
+import dao.CurrencyDao;
+import dao.ExchangeRateDao;
+import dao.JbdcCurrencyDao;
+import dao.JbdcExchangeRateDao;
 import db.DataBaseManager;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
@@ -16,18 +19,15 @@ public class ContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
-            // 1. !!! САМОЕ ГЛАВНОЕ: ПРИНУДИТЕЛЬНО ПОДГРУЖАЕМ ДРАЙВЕР ДЛЯ РАБОТЫ С БД !!!
-            // Без этой строки Tomcat часто не видит драйвер в WEB-INF/lib
+            // подгружаем драйвер бд вручную тк томкат это не делает
             Class.forName("org.sqlite.JDBC");
 
-            // 2. Получаем правильный путь к БД (как обсуждали раньше)
-            // Убедитесь, что файл data.db лежит в src/main/webapp/WEB-INF/data.db
+            // получаем правильный путь к БД
             ServletContext ctx = sce.getServletContext();
             String relativePath = "/WEB-INF/data.db";
             String absolutePath = ctx.getRealPath(relativePath);
 
-            // Фолбэк: если absolutePath null (бывает в некоторых конфигах),
-            // используем временный файл или жесткий путь для теста, но пока пробуем так:
+            // если absolutePath null, используем временный файл или жесткий путь для теста, но пока пробуем так:
             String dbUrl;
             if (absolutePath != null) {
                 dbUrl = "jdbc:sqlite:" + absolutePath;
@@ -47,7 +47,7 @@ public class ContextListener implements ServletContextListener {
             ctx.setAttribute("exchangeRateService", exchangeRateService);
 
         } catch (ClassNotFoundException e) {
-            // Если упало здесь - значит драйвера ТОЧНО нет в WEB-INF/lib
+            // Если упало здесь - значит драйвера нет в WEB-INF/lib
             throw new RuntimeException("CRITICAL: SQLite Driver not found! Check dependencies.", e);
         } catch (Exception e) {
             throw new RuntimeException("Error initializing application: " + e.getMessage(), e);

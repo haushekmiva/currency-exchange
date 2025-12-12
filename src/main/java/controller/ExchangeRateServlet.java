@@ -13,11 +13,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import models.CurrencyPair;
 import models.ExchangeRate;
 import service.ExchangeRateService;
-import utils.JsonMapper;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.util.Optional;
 
 import static utils.ResponseSender.sendResponse;
@@ -41,14 +39,7 @@ public class ExchangeRateServlet extends HttpServlet {
 
         ExchangeRate exchangeRate = exchangeRateService.getExchangeRate(baseCurrencyCode, targetCurrencyCode);
 
-        String jsonResponse = JsonMapper.toJson(exchangeRate);
-
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        try (PrintWriter printWriter = response.getWriter()) {
-            printWriter.print(jsonResponse);
-        }
+        sendResponse(response, exchangeRate);
 
     }
 

@@ -8,12 +8,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
 import service.CurrencyService;
-import utils.JsonMapper;
-import static validation.FormatValidationUtils.checkNotEmpty;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
+
+import static utils.ResponseSender.sendResponse;
+import static validation.FormatValidationUtils.checkNotEmpty;
 
 @WebServlet("/currencies")
 public class CurrenciesServlet extends HttpServlet {
@@ -31,13 +31,7 @@ public class CurrenciesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
         List<Currency> currencies = currencyService.getAllCurrencies();
 
-        String jsonResponse = JsonMapper.toJson(currencies);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        try (PrintWriter printWriter = response.getWriter()) {
-            printWriter.print(jsonResponse);
-        }
+        sendResponse(response, currencies);
     }
 
     @Override
@@ -52,13 +46,7 @@ public class CurrenciesServlet extends HttpServlet {
 
         Currency currency = currencyService.addCurrency(currencyCode, currencyName, currencySign);
 
-        String jsonResponse = JsonMapper.toJson(currency);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        try (PrintWriter printWriter = response.getWriter()) {
-            printWriter.print(jsonResponse);
-        }
+        sendResponse(response, currency);
     }
 }
 

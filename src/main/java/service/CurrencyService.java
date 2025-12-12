@@ -1,7 +1,6 @@
 package service;
 
 import dao.CurrencyDao;
-import exceptions.InputException;
 import exceptions.ResourceNotFoundException;
 import models.Currency;
 

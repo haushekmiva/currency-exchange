@@ -9,14 +9,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.ExchangeRate;
 import service.ExchangeRateService;
-import utils.JsonMapper;
+
+import java.io.IOException;
+import java.util.List;
 
 import static utils.ResponseSender.sendResponse;
 import static validation.FormatValidationUtils.checkNotEmpty;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 
 @WebServlet("/exchangeRates")
 public class ExchangeRatesServlet extends HttpServlet {
@@ -32,15 +30,7 @@ public class ExchangeRatesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
 
         List<ExchangeRate> exchangeRates = exchangeRateService.getExchangeRates();
-
-        String jsonResponse = JsonMapper.toJson(exchangeRates);
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-
-        try (PrintWriter printWriter = response.getWriter()) {
-            printWriter.print(jsonResponse);
-        }
-
+        sendResponse(response, exchangeRates);
     }
 
     @Override
