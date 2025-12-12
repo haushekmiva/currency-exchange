@@ -14,7 +14,9 @@ import service.ExchangeRateService;
 import utils.JsonMapper;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static validation.FormatValidationUtils.checkNotEmpty;
@@ -73,7 +75,7 @@ public class ExchangeRateServlet extends HttpServlet {
         }
 
         String currenciesCodes = pathSegment.get();
-        checkNotEmpty(currenciesCodes, "code");
+        checkNotEmpty(currenciesCodes, "currency codes");
 
         if (currenciesCodes.length() != 6) {
             throw new InputException("Invalid currency pair format.");
@@ -82,7 +84,9 @@ public class ExchangeRateServlet extends HttpServlet {
         String baseCurrencyCode = currenciesCodes.substring(0, 3);
         String targetCurrencyCode = currenciesCodes.substring(3, 6);
 
-        String rateRaw = request.getParameter("rate");
+        InputStream inputStream = request.getInputStream();
+        String rateRaw = InputExtractor.extractArgumentFromInputStream(inputStream, "rate");
+
 
         checkNotEmpty(baseCurrencyCode, "baseCurrencyCode");
         checkNotEmpty(targetCurrencyCode, "targetCurrencyCode");
@@ -102,6 +106,7 @@ public class ExchangeRateServlet extends HttpServlet {
         }
 
     }
+
 
 
 }
