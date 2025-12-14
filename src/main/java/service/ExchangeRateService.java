@@ -3,6 +3,7 @@ package service;
 import dao.CurrencyDao;
 import dao.ExchangeRateDao;
 import exceptions.ApplicationException;
+import exceptions.InputException;
 import exceptions.ResourceNotFoundException;
 import models.Currency;
 import models.ExchangeRate;
@@ -24,7 +25,7 @@ public class ExchangeRateService {
     }
 
     private static ExchangeResult calculateExchange(Currency baseCurrency, Currency targetCurrency, double rate, double amount) {
-        double convertedAmount = rate * amount;
+        double convertedAmount = Math.round((rate * amount) * 100.0) / 100.0;;
         return new ExchangeResult(baseCurrency, targetCurrency, rate, amount, convertedAmount);
     }
 
@@ -32,7 +33,7 @@ public class ExchangeRateService {
         double basicCurrencyRate = baseToUsd.rate();
         double targetCurrencyRate = targetToUsd.rate();
         double rate = targetCurrencyRate / basicCurrencyRate;
-        double convertedAmount = amount * rate;
+        double convertedAmount =  Math.round((amount * rate) * 100.0) / 100.0;;
 
         return new ExchangeResult(baseToUsd.targetCurrency(),
                 targetToUsd.targetCurrency(), rate, amount, convertedAmount);
@@ -53,6 +54,10 @@ public class ExchangeRateService {
         validateCurrencyCode(baseCurrencyCode);
         validateCurrencyCode(targetCurrencyCode);
         validateRate(rate);
+
+        if (baseCurrencyCode.equals(targetCurrencyCode)) {
+            throw new InputException("Base currency and target currency must be different");
+        }
 
         Currency basicCurrency = currencyDao.getByCode(baseCurrencyCode).orElseThrow(
                 () -> new ResourceNotFoundException(String.format("Currency with code %s not found.", baseCurrencyCode))
@@ -98,6 +103,13 @@ public class ExchangeRateService {
         validateCurrencyCode(targetCurrencyCode);
         validateRate(amount);
 
+        if (baseCurrencyCode.equals(targetCurrencyCode)) {
+            Optional<Currency> currency = currencyDao.getByCode(baseCurrencyCode);
+            if (currency.isPresent()) {
+                return new ExchangeResult(currency.get(), currency.get(), 1, amount, amount);
+            }
+
+        }
 
 
         // first method

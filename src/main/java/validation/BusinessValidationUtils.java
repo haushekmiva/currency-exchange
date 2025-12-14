@@ -23,7 +23,7 @@ public class BusinessValidationUtils {
     }
 
     public static void validateRate(double rate) {
-        if (rate < 0.0) {
+        if (rate <= 0.0) {
             throw new InputException("Rate must be more than 0.");
         }
     }

@@ -28,7 +28,7 @@ public class ErrorHandlingFilter implements Filter {
             sendErrorResponse(httpResponse, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
         } catch (DuplicateResourceException e) {
             sendErrorResponse(httpResponse, HttpServletResponse.SC_CONFLICT, e.getMessage());
-        } catch (WriteToJsonException | ApplicationException | DataAccessException e) {
+        } catch (DataAccessException | ApplicationException e) {
             sendErrorResponse(httpResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         } catch (Throwable e) {
             sendErrorResponse(httpResponse, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Occurred server error.");
@@ -41,14 +41,19 @@ public class ErrorHandlingFilter implements Filter {
 
     private void sendErrorResponse(HttpServletResponse response, int status, String message) {
         try {
-            // Проверяем что ответ ещё не был отправлен
             if (!response.isCommitted()) {
-                response.reset(); // Очищаем любые данные которые могли быть записаны
+                response.reset();
+
+                // ===== ДОБАВЬ CORS ЗАГОЛОВКИ СЮДА! =====
+                response.setHeader("Access-Control-Allow-Origin", "*");
+                response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
+                response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+                // =======================================
+
                 response.setStatus(status);
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
 
-                // Более детальный формат ошибки
                 ErrorMessage errorMessage = new ErrorMessage(message);
                 String jsonResponse = JsonMapper.toJson(errorMessage);
 

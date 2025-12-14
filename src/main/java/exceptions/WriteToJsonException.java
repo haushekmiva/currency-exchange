@@ -1,6 +1,6 @@
 package exceptions;
 
-public class WriteToJsonException extends RuntimeException {
+public class WriteToJsonException extends  ApplicationException {
 
     public WriteToJsonException(String message) {
         super(message);

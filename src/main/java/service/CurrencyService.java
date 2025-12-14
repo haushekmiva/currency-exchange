@@ -39,9 +39,4 @@ public class CurrencyService {
         Currency currency = currencyDao.add(code, fullName, sign);
         return currency;
     }
-
-    private boolean isNotValid(String string, String regex) {
-        return !string.matches(regex);
-    }
-
 }

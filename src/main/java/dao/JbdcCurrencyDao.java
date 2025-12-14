@@ -37,7 +37,7 @@ public class JbdcCurrencyDao implements CurrencyDao {
                 String code = resultSet.getString("code");
                 String fullName = resultSet.getString("full_name");
                 String sign = resultSet.getString("sign");
-                Currency currency = new Currency(id, code, fullName, sign);
+                Currency currency = new Currency(id, fullName, code, sign);
                 currencies.add(currency);
             }
             return currencies;
@@ -60,7 +60,7 @@ public class JbdcCurrencyDao implements CurrencyDao {
                     int id = resultSet.getInt("id");
                     String fullName = resultSet.getString("full_name");
                     String sign = resultSet.getString("sign");
-                    Currency currency = new Currency(id, code, fullName, sign);
+                    Currency currency = new Currency(id, fullName, code, sign);
                     return Optional.of(currency);
                 } else return Optional.empty();
             }
@@ -83,7 +83,7 @@ public class JbdcCurrencyDao implements CurrencyDao {
             try (ResultSet resultSet = stmt.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     int id = resultSet.getInt(1);
-                    Currency currency = new Currency(id, code, fullName, sign);
+                    Currency currency = new Currency(id, fullName, code, sign);
                     return currency;
                 } else throw new DataAccessException("Failed to retrieve generated ID after inserting currency.");
             }

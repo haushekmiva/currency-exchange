@@ -1,6 +1,6 @@
 package exceptions;
 
-public class ReadFromJsonException extends RuntimeException {
+public class ReadFromJsonException extends ApplicationException {
 
     public ReadFromJsonException(String message) {
         super(message);

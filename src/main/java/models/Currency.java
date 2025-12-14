@@ -2,7 +2,7 @@ package models;
 
 public record Currency(
         int id,
-        String fullName,
+        String name,
         String code,
         String sign
 ) {
