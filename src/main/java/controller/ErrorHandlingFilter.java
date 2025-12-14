@@ -8,7 +8,6 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import dto.ErrorMessage;
-import utils.JsonMapper;
 
 import java.io.IOException;
 import jakarta.servlet.Filter;
@@ -19,7 +18,6 @@ import static utils.ResponseSender.sendResponse;
 public class ErrorHandlingFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         try {
             chain.doFilter(request, response);

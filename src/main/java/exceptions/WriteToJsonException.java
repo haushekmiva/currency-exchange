@@ -1,16 +1,7 @@
 package exceptions;
 
 public class WriteToJsonException extends  ApplicationException {
-
-    public WriteToJsonException(String message) {
-        super(message);
-    }
-
     public WriteToJsonException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public WriteToJsonException() {
-        super();
     }
 }

@@ -25,7 +25,7 @@ public class ExchangeRateService {
     }
 
     private static ExchangeResult calculateExchange(Currency baseCurrency, Currency targetCurrency, double rate, double amount) {
-        double convertedAmount = Math.round((rate * amount) * 100.0) / 100.0;;
+        double convertedAmount = Math.round((rate * amount) * 100.0) / 100.0;
         return new ExchangeResult(baseCurrency, targetCurrency, rate, amount, convertedAmount);
     }
 
@@ -33,7 +33,7 @@ public class ExchangeRateService {
         double basicCurrencyRate = baseToUsd.rate();
         double targetCurrencyRate = targetToUsd.rate();
         double rate = targetCurrencyRate / basicCurrencyRate;
-        double convertedAmount =  Math.round((amount * rate) * 100.0) / 100.0;;
+        double convertedAmount =  Math.round((amount * rate) * 100.0) / 100.0;
 
         return new ExchangeResult(baseToUsd.targetCurrency(),
                 targetToUsd.targetCurrency(), rate, amount, convertedAmount);
