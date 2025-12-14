@@ -17,10 +17,9 @@ public class ResponseSender {
 
         String jsonResponse = JsonMapper.toJson(jsonContent);
 
-        try (PrintWriter printWriter = response.getWriter()) {
-            response.setStatus(status);
-            printWriter.print(jsonResponse);
-        }
+        PrintWriter printWriter = response.getWriter();
+        response.setStatus(status);
+        printWriter.print(jsonResponse);
     }
 
 }
