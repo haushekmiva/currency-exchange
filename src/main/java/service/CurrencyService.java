@@ -2,7 +2,7 @@ package service;
 
 import dao.CurrencyDao;
 import exceptions.ResourceNotFoundException;
-import models.Currency;
+import dto.Currency;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +36,6 @@ public class CurrencyService {
         validateCurrencyFullName(fullName);
         validateCurrencySign(sign);
 
-        Currency currency = currencyDao.add(code, fullName, sign);
-        return currency;
+        return currencyDao.add(code, fullName, sign);
     }
 }

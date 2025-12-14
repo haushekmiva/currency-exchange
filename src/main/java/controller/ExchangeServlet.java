@@ -7,7 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.ExchangeResult;
+import dto.ExchangeResult;
 import service.ExchangeRateService;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ import static utils.ResponseSender.sendResponse;
 import static validation.FormatValidationUtils.checkNotEmpty;
 
 @WebServlet("/exchange")
-public class exchangeServlet extends HttpServlet {
+public class ExchangeServlet extends HttpServlet {
 
     private ExchangeRateService exchangeRateService;
 
@@ -40,7 +40,7 @@ public class exchangeServlet extends HttpServlet {
 
         ExchangeResult exchangeResult = exchangeRateService.exchangeCurrency(baseCurrencyCode, targetCurrencyCode, amount);
 
-        sendResponse(response, exchangeResult);
+        sendResponse(response, exchangeResult, HttpServletResponse.SC_OK);
     }
 
 }

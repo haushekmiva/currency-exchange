@@ -1,7 +1,7 @@
 package utils;
 
-import models.Currency;
-import models.ExchangeRate;
+import dto.Currency;
+import dto.ExchangeRate;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -28,9 +28,8 @@ public final class ExchangeRateCreator {
 
         Currency baseCurrency = new Currency(baseCurrencyId, baseCurrencyFullName, baseCurrencyCode, baseCurrencySign);
         Currency targetCurrency = new Currency(targetCurrencyId, targetCurrencyFullName, targetCurrencyCode, targetCurrencySign);
-        ExchangeRate exchangeRate = new ExchangeRate(exchangeRateId, baseCurrency, targetCurrency, rate);
 
-        return exchangeRate;
+        return new ExchangeRate(exchangeRateId, baseCurrency, targetCurrency, rate);
 
     }
 

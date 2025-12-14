@@ -8,7 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.Currency;
+import dto.Currency;
 import service.CurrencyService;
 
 import java.io.IOException;
@@ -36,10 +36,11 @@ public class CurrencyServlet extends HttpServlet {
         if (userInput.isEmpty()) {
             throw new InputException("Currency code is required in the address.");
         }
+
         String currencyCode = userInput.get();
         checkNotEmpty(currencyCode, "code");
         Currency currency = currencyService.getCurrencyByCode(currencyCode);
 
-        sendResponse(response, currency);
+        sendResponse(response, currency, HttpServletResponse.SC_OK);
     }
 }

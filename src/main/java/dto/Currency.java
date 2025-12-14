@@ -1,4 +1,4 @@
-package models;
+package dto;
 
 public record Currency(
         int id,

@@ -3,7 +3,7 @@ package dao;
 import db.DataBaseManager;
 import exceptions.DataAccessException;
 import exceptions.DuplicateResourceException;
-import models.Currency;
+import dto.Currency;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -83,8 +83,7 @@ public class JbdcCurrencyDao implements CurrencyDao {
             try (ResultSet resultSet = stmt.getGeneratedKeys()) {
                 if (resultSet.next()) {
                     int id = resultSet.getInt(1);
-                    Currency currency = new Currency(id, fullName, code, sign);
-                    return currency;
+                    return new Currency(id, fullName, code, sign);
                 } else throw new DataAccessException("Failed to retrieve generated ID after inserting currency.");
             }
 

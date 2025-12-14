@@ -1,7 +1,6 @@
 package controller;
 
 import exceptions.InputException;
-import exceptions.ResourceNotFoundException;
 import extractors.InputExtractor;
 import extractors.PathExtractor;
 import jakarta.servlet.ServletContext;
@@ -10,8 +9,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.CurrencyPair;
-import models.ExchangeRate;
+import dto.CurrencyPair;
+import dto.ExchangeRate;
 import service.ExchangeRateService;
 
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class ExchangeRateServlet extends HttpServlet {
 
         ExchangeRate exchangeRate = exchangeRateService.getExchangeRate(baseCurrencyCode, targetCurrencyCode);
 
-        sendResponse(response, exchangeRate);
+        sendResponse(response, exchangeRate, HttpServletResponse.SC_OK);
 
     }
 
@@ -61,7 +60,7 @@ public class ExchangeRateServlet extends HttpServlet {
         double rate = InputExtractor.extractDouble(rateRaw, "rate");
         ExchangeRate exchangeRate = exchangeRateService.updateExchangeRates(baseCurrencyCode, targetCurrencyCode, rate);
 
-        sendResponse(response, exchangeRate);
+        sendResponse(response, exchangeRate, HttpServletResponse.SC_OK);
 
     }
 

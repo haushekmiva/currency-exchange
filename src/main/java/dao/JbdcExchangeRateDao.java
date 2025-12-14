@@ -4,7 +4,7 @@ import db.DataBaseManager;
 import exceptions.DataAccessException;
 import exceptions.DuplicateResourceException;
 import exceptions.ResourceNotFoundException;
-import models.ExchangeRate;
+import dto.ExchangeRate;
 import utils.ExchangeRateCreator;
 
 import java.sql.*;

@@ -7,7 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.ExchangeRate;
+import dto.ExchangeRate;
 import service.ExchangeRateService;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class ExchangeRatesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
 
         List<ExchangeRate> exchangeRates = exchangeRateService.getExchangeRates();
-        sendResponse(response, exchangeRates);
+        sendResponse(response, exchangeRates, HttpServletResponse.SC_OK);
     }
 
     @Override
@@ -46,8 +46,7 @@ public class ExchangeRatesServlet extends HttpServlet {
 
         ExchangeRate exchangeRate = exchangeRateService.addExchangeRate(baseCurrencyCode, targetCurrencyCode, rate);
 
-        response.setStatus(HttpServletResponse.SC_CREATED);
-        sendResponse(response, exchangeRate);
+        sendResponse(response, exchangeRate, HttpServletResponse.SC_OK);
     }
 
 }

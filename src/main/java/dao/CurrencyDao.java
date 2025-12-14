@@ -1,6 +1,6 @@
 package dao;
 
-import models.Currency;
+import dto.Currency;
 
 import java.util.List;
 import java.util.Optional;

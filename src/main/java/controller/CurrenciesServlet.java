@@ -6,7 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.Currency;
+import dto.Currency;
 import service.CurrencyService;
 
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class CurrenciesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
         List<Currency> currencies = currencyService.getAllCurrencies();
 
-        sendResponse(response, currencies);
+        sendResponse(response, currencies, HttpServletResponse.SC_OK);
     }
 
     @Override
@@ -46,8 +46,7 @@ public class CurrenciesServlet extends HttpServlet {
 
         Currency currency = currencyService.addCurrency(currencyCode, currencyName, currencySign);
 
-        response.setStatus(HttpServletResponse.SC_CREATED);
-        sendResponse(response, currency);
+        sendResponse(response, currency, HttpServletResponse.SC_CREATED);
     }
 }
 

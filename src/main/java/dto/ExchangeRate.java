@@ -1,4 +1,4 @@
-package models;
+package dto;
 
 public record ExchangeRate(
         int id,

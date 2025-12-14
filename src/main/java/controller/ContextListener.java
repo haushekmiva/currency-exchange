@@ -26,14 +26,7 @@ public class ContextListener implements ServletContextListener {
             ServletContext ctx = sce.getServletContext();
             String relativePath = "/WEB-INF/data.db";
             String absolutePath = ctx.getRealPath(relativePath);
-
-            // если absolutePath null, используем временный файл или жесткий путь для теста, но пока пробуем так:
-            String dbUrl;
-            if (absolutePath != null) {
-                dbUrl = "jdbc:sqlite:" + absolutePath;
-            } else dbUrl = "jdbc:sqlite:C:/Temp/data.db"; // На крайний случай, если путь не найдется
-
-            System.out.println(dbUrl);
+            String dbUrl = "jdbc:sqlite:" + absolutePath;
 
             DataBaseManager manager = new DataBaseManager(dbUrl);
             DatabaseInitializer.init(manager);
@@ -48,14 +41,9 @@ public class ContextListener implements ServletContextListener {
             ctx.setAttribute("exchangeRateService", exchangeRateService);
 
         } catch (ClassNotFoundException e) {
-            // Если упало здесь - значит драйвера нет в WEB-INF/lib
             throw new RuntimeException("CRITICAL: SQLite Driver not found! Check dependencies.", e);
         } catch (Exception e) {
             throw new RuntimeException("Error initializing application: " + e.getMessage(), e);
         }
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
     }
 }

@@ -2,17 +2,18 @@ package controller;
 
 import exceptions.*;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.ErrorMessage;
+import dto.ErrorMessage;
 import utils.JsonMapper;
 
 import java.io.IOException;
 import jakarta.servlet.Filter;
+
+import static utils.ResponseSender.sendResponse;
 
 @WebFilter("/*")
 public class ErrorHandlingFilter implements Filter {
@@ -22,7 +23,7 @@ public class ErrorHandlingFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         try {
             chain.doFilter(request, response);
-        } catch (InputException | ReadFromJsonException e) {
+        } catch (InputException e) {
             sendErrorResponse(httpResponse, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (ResourceNotFoundException e) {
             sendErrorResponse(httpResponse, HttpServletResponse.SC_NOT_FOUND, e.getMessage());
@@ -38,26 +39,12 @@ public class ErrorHandlingFilter implements Filter {
     }
 
 
-
     private void sendErrorResponse(HttpServletResponse response, int status, String message) {
         try {
             if (!response.isCommitted()) {
-                response.reset();
-
-                // ===== ДОБАВЬ CORS ЗАГОЛОВКИ СЮДА! =====
-                response.setHeader("Access-Control-Allow-Origin", "*");
-                response.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
-                response.setHeader("Access-Control-Allow-Headers", "Content-Type");
-                // =======================================
-
-                response.setStatus(status);
-                response.setContentType("application/json");
-                response.setCharacterEncoding("UTF-8");
-
+                // response.reset() мы опускаем специально, чтобы не стирались CORS заголовки
                 ErrorMessage errorMessage = new ErrorMessage(message);
-                String jsonResponse = JsonMapper.toJson(errorMessage);
-
-                response.getWriter().write(jsonResponse);
+                sendResponse(response, errorMessage, status);
             }
         } catch (IOException e) {
             System.err.println("Failed to send error response: " + e.getMessage());

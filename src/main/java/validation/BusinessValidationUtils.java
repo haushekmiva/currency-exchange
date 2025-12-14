@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class BusinessValidationUtils {
     private static final Pattern CURRENCY_CODE_PATTERN = Pattern.compile("^[A-Z]{3}$");
-    private static final Pattern CURRENCY_FULLANME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\s]{3,20}$");
+    private static final Pattern CURRENCY_FULLNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9\\s]{3,20}$");
     private static final Pattern CURRENCY_SIGN_PATTERN = Pattern.compile("^.{1,5}$");
 
     public static void validateCurrencyCode(String code) {
@@ -14,7 +14,7 @@ public class BusinessValidationUtils {
     }
 
     public static void validateCurrencyFullName(String fullName) {
-        validateHelper(fullName, CURRENCY_FULLANME_PATTERN, "Currency full name must have from 3 to 20 symbols.");
+        validateHelper(fullName, CURRENCY_FULLNAME_PATTERN, "Currency full name must have from 3 to 20 symbols.");
 
     }
 

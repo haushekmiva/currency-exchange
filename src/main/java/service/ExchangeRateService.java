@@ -5,9 +5,9 @@ import dao.ExchangeRateDao;
 import exceptions.ApplicationException;
 import exceptions.InputException;
 import exceptions.ResourceNotFoundException;
-import models.Currency;
-import models.ExchangeRate;
-import models.ExchangeResult;
+import dto.Currency;
+import dto.ExchangeRate;
+import dto.ExchangeResult;
 
 import java.util.List;
 import java.util.Optional;
